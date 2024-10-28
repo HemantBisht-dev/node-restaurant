@@ -1,6 +1,9 @@
 const express = require("express");
 const db = require("./db");
 const app = express();
+
+const passport = require("./auth");
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.json()); // req.body
 require("dotenv").config();
@@ -17,11 +20,14 @@ const logRequest = (req, res, next) => {
 };
 
 // apply middleware to all Routes
-app.use(logRequest) // this line tells Express to use this middleware for all routes
+app.use(logRequest); // this line tells Express to use this middleware for all routes
 
+// authenticate
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate("local", { session: false });
 
 // Define Routes
-app.get("/" , function (req, res) {
+app.get("/", function (req, res) {
   res.send("Welcome to our restaurant");
 });
 
@@ -30,7 +36,7 @@ const personRoutes = require("./routes/personRoutes");
 const menuRoutes = require("./routes/menuRoutes");
 
 // use the routers
-app.use("/person", personRoutes);
+app.use("/person", localAuthMiddleware, personRoutes);
 app.use("/menu", menuRoutes);
 
 const PORT = process.env.PORT || 3000;

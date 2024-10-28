@@ -17,6 +17,14 @@ const personSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   address: { type: String },
   salary: { type: Number, required: true },
+  username:{
+    type:String,
+    required:true
+  },
+  password:{
+    type:String,
+    required:true
+  }
 });
 
 // create person model
