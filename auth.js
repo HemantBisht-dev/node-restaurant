@@ -16,8 +16,8 @@ passport.use(
         return done(null, false, { message: "Incorrect username" });
       }
 
-      const isPassword = user.password === PASSWORD ? true : false;
-      if (isPassword) {
+      const isPasswordMatch = await user.comparePassword(PASSWORD);
+      if (isPasswordMatch) {
         return done(null, user);
       } else {
         return done(null, false, { message: "Incorrect password" });
